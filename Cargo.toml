@@ -1,0 +1,10 @@
+[package]
+name = "natty"
+version = "0.1.0"
+authors = ["Josh Mcguigan"]
+edition = "2018"
+
+[dependencies]
+pnet = "0.22"
+tun-tap = { git = "https://github.com/vorner/tuntap.git" }
+crossbeam = "0.7"

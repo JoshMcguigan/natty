@@ -32,9 +32,10 @@ fn cmd(cmd: &str, args: &[&str]) {
     assert!(ecode.success(), "Failed to execte {}", cmd);
 }
 
-fn do_tap_stuff() -> Iface {
+fn do_tap_stuff(mac: String) -> Iface {
     let iface = Iface::without_packet_info("testtun%d", Mode::Tap).unwrap();
     cmd("ip", &["addr", "add", "dev", iface.name(), "10.107.1.51/24"]);
+    cmd("ip", &["link", "set", "dev", iface.name(), "address", &mac]);
     cmd("ip", &["link", "set", "up", "dev", iface.name()]);
     println!("Created interface {}", iface.name());
 
@@ -177,7 +178,7 @@ fn main() {
         .find(interface_names_match)
         .unwrap();
 
-    let tap_interface = do_tap_stuff();
+    let tap_interface = do_tap_stuff(format!("{}", interface.mac.unwrap()));
     let tap_mac_addr = datalink::interfaces()
         .into_iter()
         .find(|iface: &NetworkInterface| tap_interface.name() == &iface.name)
